@@ -13,7 +13,6 @@ class Ninjoid  {
     state = t;
     ninjNumA = n;
     ninjNumB = n%3;
-    println("ninjState: "+state);
     
     //Define Focal Point of Ninjoid
     if (state == 0)  {
@@ -70,8 +69,6 @@ class Ninjoid  {
   void next()  {
     
     state = 2;
-    println("G- ninjState: "+state);
-    println("G- Right now Piece 1's pState is: "+pieces.get(1).pState);
     
          if (camAng == 0) {
                   if (ninjNumB == 0) { pos = new PVector (2,-1,2); ori = 0; }
@@ -315,54 +312,80 @@ class Ninjoid  {
   //-----------------------------------------------------------------------------------------------------------------
   //Automatic Ninjoid Movement
   void move()  {
-    pushdown = pushSpd;
-    boolean col = false;
-    if (state == 0)  {
-    }
-    else if (state == 1)  {
-    }
-    else if (state == 2)  {
-      if (millis() - timeN >= pushdown) {
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.y == pos.y+1 && ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(ori, ninjoids.get(i).ori) == true) col = true;
+    if (gamestate == 3) {
+      pushdown = pushSpd;
+      boolean col = false;
+      if (state == 0)  {
+      }
+      else if (state == 1)  {
+      }
+      else if (state == 2)  {
+        if (millis() - timeN >= pushdown) {
+          for(int i=0; i<ninjoids.size(); i++)  {
+            if (ninjoids.get(i).pos.y == pos.y+1 && ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
+              if (collide(ori, ninjoids.get(i).ori) == true) col = true;
+            }
           }
-        }
-        if (col == false)  {
-          pos.y++;
-        }
-        else  {
-          if (pos.y > 0 || (pos. y == 0 && (pos.x == 0 || pos.x == 3 || pos.z == 0 || pos.z == 3)))  {
-            state = 0;
-            pieces.get(ninjNumA/3).stop();
+          if (col == false && state == 2)  {
+            pos.y++;
           }
           else  {
-            gamestate = 4;
+            if (pos.y > 0 || (pos. y == 0 && (pos.x == 0 || pos.x == 3 || pos.z == 0 || pos.z == 3)))  {
+              gamestate = 2;
+              println("curP: "+curPiec);
+              for (int i=curPiec; i<curPiec+3; i++) {
+                ninjoids.get(i).die();
+              }
+              println("curP: "+curPiec);
+            }
+            else  {
+              gamestate = 4;
+            }
           }
+          timeN = millis();
         }
-        timeN = millis();
+        
+        if(pos.y > 7)  {
+          pos.y = 7;
+          gamestate = 2;
+          println("curP: "+curPiec);
+          for (int i=curPiec; i<curPiec+3; i++) {
+            ninjoids.get(i).die();
+          }
+          println("curP: "+curPiec);
+        }
+        if(pos.x < 0)  {
+          pos.x = 0;
+        }
+        else if(pos.x > 3)  {
+          pos.x = 3;
+        }
+        if(pos.z < 0)  {
+          pos.z = 0;
+        }
+        else if(pos.z > 3)  {
+          pos.z = 3;
+        }
       }
-      
-      if(pos.y > 7)  {
-        pos.y = 7;
-        state = 0;
-        println("E- Ninj " +ninjNumA+ " Hit the Floor");
-        println("E- Asking Piece " +(ninjNumA/3)+ " to Stop");
-        pieces.get(ninjNumA/3).stop();
+    }
+  }
+    
+  //-----------------------------------------------------------------------------------------------------------------
+  //Die
+  void die()  {
+    if (gamestate == 2) {
+      println("lol, I'm ded");
+      for (int i=(3*curPiec); i<(3*curPiec)+3; i++) {
+        ninjoids.get(i).state = 0;
       }
-      if(pos.x < 0)  {
-        pos.x = 0;
+      curPiec++;
+      for (int i=(3*curPiec); i<(3*curPiec)+3; i++) {
+        ninjoids.get(i).next();
       }
-      else if(pos.x > 3)  {
-        pos.x = 3;
-      }
-      if(pos.z < 0)  {
-        pos.z = 0;
-      }
-      else if(pos.z > 3)  {
-        pos.z = 3;
-      }
-      
+      ninjoids.add(new Ninjoid(1,(3*(curPiec+1))));
+      ninjoids.add(new Ninjoid(1,(3*(curPiec+1))+1));
+      ninjoids.add(new Ninjoid(1,(3*(curPiec+1))+2));
+      gamestate = 3;
     }
   }
     

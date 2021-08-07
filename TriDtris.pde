@@ -15,17 +15,21 @@
   //Add another way to view the board simultaneously for easier board state recognition
 
 PFont pqrf; PFont ffff;
-ArrayList<Piece> pieces;
 ArrayList<Ninjoid> ninjoids;
 int scale;
-int time; int time1; //time1 is time when gamestarted
-String mins; String secs;
+int time; int time1; //time1 is the time when the game started
+String mins; String secs; //used in the timer
+
+//Input Display Positions
 float upPos = 8.75; float downPos = 8.75; float leftPos = 8.75; float rightPos = 8.75;
 float qPos = 8.75; float wPos = 8.75; float aPos = 8.75; float sPos = 8.75; float zPos = 8.75; float xPos = 8.75;
 float ePos = 8.75; float rPos = 8.75;
+
 int gamestate = 0;
 int camAng = 0;
 int pushSpd = 200;
+
+int curPiec = -1;
 
 void setup()  {
   size (600,600, P3D); //Size of the Window
@@ -33,12 +37,10 @@ void setup()  {
   ffff = createFont("FFFf.ttf",16);
   textFont(ffff);
   scale = width/12;
-  hint(ENABLE_DEPTH_SORT);
+  hint(ENABLE_DEPTH_SORT); //Fixes 3D rendering!
   
   ninjoids = new ArrayList<Ninjoid>();
-  pieces = new ArrayList<Piece>();
   
-  println("A- gs: "+gamestate);
 }
 
 void draw()  {
@@ -70,7 +72,7 @@ void draw()  {
     text("Game Over!",2*scale,3*scale,4.5*scale);
   }
   text("Game State: "+gamestate,6.25*scale,.25*scale,1*scale);
-  text("Piece Count: "+((pieces.size())-1),6.25*scale,.75*scale,1*scale);
+  text("Piece Count: "+(curPiec+1),6.25*scale,.75*scale,1*scale);
   text("Ninjoid Count: "+(ninjoids.size()-3),6.25*scale,1.25*scale,1*scale);
   text("Next:",6*scale,1.75*scale,3*scale);
   if (gamestate > 0 && gamestate != 4)  {
@@ -156,11 +158,10 @@ void draw()  {
   line(7*scale,3*scale,2*scale,7*scale,2*scale,2*scale);
   
   //Pieces
-  for (int i=0; i<pieces.size(); i++){
+  for (int i = 0; i < ninjoids.size(); i++) {
     fill(255,0,0,64);
-    //println("X- I'm piece "+i+ " my count is at " + pieces.get(i).count + " and my pState is " + pieces.get(i).pState);
-    pieces.get(i).move();
-    pieces.get(i).display();
+    ninjoids.get(i).move();
+    ninjoids.get(i).display();
   }
 }
 
@@ -168,108 +169,72 @@ void keyPressed()  {
   if (gamestate == 0 && keyCode == 32)  {
     time1 = millis();
     gamestate = 1;
-    println("B- gs: "+gamestate);
-    println("B- Create piece: "+pieces.size());
-    pieces.add(new Piece(pieces.size(),0));
-    println("B- Piece 0's count: "+pieces.get(0).count);
+    
+    //CurPiece is -1
+    ninjoids.add(new Ninjoid(2,0)); //Ninjoid 0 is Alive
+    ninjoids.add(new Ninjoid(2,1)); //Ninjoid 1 is Alive
+    ninjoids.add(new Ninjoid(2,2)); //Ninjoid 2 is Alive
+    curPiec++; //CurPiece is 0
+    gamestate = 2;
+    ninjoids.add(new Ninjoid(1,3)); //Ninjoid 3 is Next
+    ninjoids.add(new Ninjoid(1,4)); //Ninjoid 4 is Next
+    ninjoids.add(new Ninjoid(1,5)); //Ninjoid 5 is Next
+    println("Let's get this party started!");
+    gamestate = 3;
   }
   else if ((gamestate == 2 || gamestate == 3) && keyCode == 32)  {
     pushSpd = 200;
   }
   
   if (gamestate != 4)  {
-    if (keyCode == LEFT)  {
-      leftPos = 9.0;
-    }
-    else if (keyCode == RIGHT)  {
-      rightPos = 9.0;
-    }
-    else if (keyCode == UP)  {
-      upPos = 9.0;
-    }
-    else if (keyCode == DOWN)  {
-      downPos = 9.0;
-    }
-    else if (keyCode == 'Q')  {
-      qPos = 9.0;
-    }
-    else if (keyCode == 'W')  {
-      wPos = 9.0;
-    }
-    else if (keyCode == 'A')  {
-      aPos = 9.0;
-    }
-    else if (keyCode == 'S')  {
-      sPos = 9.0;
-    }
-    else if (keyCode == 'Z')  {
-      zPos = 9.0;
-    }
-    else if (keyCode == 'X')  {
-      xPos = 9.0;
-    }
-    else if (keyCode == 'E')  {
-      ePos = 9.0;
-    }
-    else if (keyCode == 'R')  {
-      rPos = 9.0;
-    }
+    if (keyCode == LEFT) leftPos = 9.0;
+    else if (keyCode == RIGHT) rightPos = 9.0;
+    else if (keyCode == UP) upPos = 9.0;
+    else if (keyCode == DOWN) downPos = 9.0;
+    else if (keyCode == 'Q') qPos = 9.0;
+    else if (keyCode == 'W') wPos = 9.0;
+    else if (keyCode == 'A') aPos = 9.0;
+    else if (keyCode == 'S') sPos = 9.0;
+    else if (keyCode == 'Z') zPos = 9.0;
+    else if (keyCode == 'X') xPos = 9.0;
+    else if (keyCode == 'E') ePos = 9.0;
+    else if (keyCode == 'R') rPos = 9.0;
   }
 }
 
 void keyReleased()  {
   
-  if ((gamestate == 2 || gamestate == 3) && keyCode == 32)  {
+  if ((gamestate ==  2 || gamestate == 3) && keyCode == 32)  {
     pushSpd = 1000;
   }
   else if (gamestate != 4)  {
-    for (int i=0; i<pieces.size(); i++){
-      pieces.get(i).control(keyCode);
+    for (int i=(3*curPiec); i<(3*curPiec)+3; i++){
+      ninjoids.get(i).control(keyCode);
     }
-    if (keyCode == LEFT)  {
-      leftPos = 8.75;
-    }
-    else if (keyCode == RIGHT)  {
-      rightPos = 8.75;
-    }
-    else if (keyCode == UP)  {
-      upPos = 8.75;
-    }
-    else if (keyCode == DOWN)  {
-      downPos = 8.75;
-    }
-    else if (keyCode == 'Q')  {
-      qPos = 8.75;
-    }
-    else if (keyCode == 'W')  {
-      wPos = 8.75;
-    }
-    else if (keyCode == 'A')  {
-      aPos = 8.75;
-    }
-    else if (keyCode == 'S')  {
-      sPos = 8.75;
-    }
-    else if (keyCode == 'Z')  {
-      zPos = 8.75;
-    }
-    else if (keyCode == 'X')  {
-      xPos = 8.75;
-    }
+    if (keyCode == LEFT) leftPos = 8.75;
+    else if (keyCode == RIGHT) rightPos = 8.75;
+    else if (keyCode == UP) upPos = 8.75;
+    else if (keyCode == DOWN) downPos = 8.75;
+    else if (keyCode == 'Q') qPos = 8.75;
+    else if (keyCode == 'W') wPos = 8.75;
+    else if (keyCode == 'A') aPos = 8.75;
+    else if (keyCode == 'S') sPos = 8.75;
+    else if (keyCode == 'Z') zPos = 8.75;
+    else if (keyCode == 'X') xPos = 8.75;
     else if (keyCode == 'E')  {
       ePos = 8.75;
       camAng--;
       if (camAng < 0) camAng = 3;
-      for (int i=0; i < ninjoids.size(); i++)  {
-        ninjoids.get(i).camLeft();
+      for (Ninjoid n : ninjoids)  {
+        n.camLeft();
       }
     }
     else if (keyCode == 'R')  {
       rPos = 8.75;
       camAng++;
       if (camAng > 3) camAng = 0;
-      for (int i=0; i < ninjoids.size(); i++)  {
-        ninjoids.get(i).camRight();
+      for (Ninjoid n : ninjoids)  {
+        n.camRight();
       }
     }
   }
