@@ -2,12 +2,10 @@ class Ninjoid  {
   int ninjNumA = 0; //Position in the ninjoid list used for determine which piece it's a part of.
   int ninjNumB = 0; //Each piece has 3 ninjoids: 0, 1, & 2
   int state = 2; //0=Dead, 1=Next, 2=Alive
-  int ori = 0; //Orientation ID
-  int newori = 0;
+  int ori = 0; int newori = 0; //Orientation ID
   PVector pos = new PVector(0,0,0);
-  PVector v0 = pos;  PVector v1 = pos;  PVector v2 = pos;  PVector v3 = pos;  PVector v4 = pos;
+  PVector v0 = pos;  PVector v1 = pos;  PVector v2 = pos;  PVector v3 = pos;  PVector v4 = pos; //Vertices of the ninjoids used for drawing.
   int timeN = millis();
-  int pushdown = 500;
   
   Ninjoid(int t, int n)  {
     state = t;
@@ -69,28 +67,28 @@ class Ninjoid  {
   //Move Next Piece to Spawn Zone
   void next()  {
     
-    state = 2;
-    
-         if (camAng == 0) {
-                  if (ninjNumB == 0) { pos = new PVector (2,-1,2); ori = 0; }
-             else if (ninjNumB == 1) { pos = new PVector (2,-1,1); ori = 0; }
-             else if (ninjNumB == 2) { pos = new PVector (1,-1,2); ori = 0; }
-          }
-    else if (camAng == 1) {
-                  if (ninjNumB == 0) { pos = new PVector (2,-1,1); ori = 1; }
-             else if (ninjNumB == 1) { pos = new PVector (1,-1,1); ori = 1; }
-             else if (ninjNumB == 2) { pos = new PVector (2,-1,2); ori = 1; }
-     }
-    else if (camAng == 2) {
-                  if (ninjNumB == 0) { pos = new PVector (1,-1,1); ori = 2; }
-             else if (ninjNumB == 1) { pos = new PVector (1,-1,2); ori = 2; }
-             else if (ninjNumB == 2) { pos = new PVector (2,-1,1); ori = 2; }
-     }
-    else if (camAng == 3) {
-                  if (ninjNumB == 0) { pos = new PVector (1,-1,2); ori = 3; }
-             else if (ninjNumB == 1) { pos = new PVector (2,-1,2); ori = 3; }
-             else if (ninjNumB == 2) { pos = new PVector (1,-1,1); ori = 3; }
-     }
+      state = 2;
+      
+           if (camAng == 0) {
+                    if (ninjNumB == 0) { pos = new PVector (2,-1,2); ori = 0; }
+               else if (ninjNumB == 1) { pos = new PVector (2,-1,1); ori = 0; }
+               else if (ninjNumB == 2) { pos = new PVector (1,-1,2); ori = 0; }
+            }
+      else if (camAng == 1) {
+                    if (ninjNumB == 0) { pos = new PVector (2,-1,1); ori = 1; }
+               else if (ninjNumB == 1) { pos = new PVector (1,-1,1); ori = 1; }
+               else if (ninjNumB == 2) { pos = new PVector (2,-1,2); ori = 1; }
+       }
+      else if (camAng == 2) {
+                    if (ninjNumB == 0) { pos = new PVector (1,-1,1); ori = 2; }
+               else if (ninjNumB == 1) { pos = new PVector (1,-1,2); ori = 2; }
+               else if (ninjNumB == 2) { pos = new PVector (2,-1,1); ori = 2; }
+       }
+      else if (camAng == 3) {
+                    if (ninjNumB == 0) { pos = new PVector (1,-1,2); ori = 3; }
+               else if (ninjNumB == 1) { pos = new PVector (2,-1,2); ori = 3; }
+               else if (ninjNumB == 2) { pos = new PVector (1,-1,1); ori = 3; }
+       }
   }  
   
   //-----------------------------------------------------------------------------------------------------------------
@@ -157,216 +155,31 @@ class Ninjoid  {
   
   
   //-----------------------------------------------------------------------------------------------------------------
-  //Manual Ninjoid Movement
-  void control(int ky)  {
-    boolean col = false;
-    if (state == 0)  {
-    }
-    else if (state == 1)  {
-    }
-    else if (state == 2)  {
-      if(ky == LEFT)  {
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x-1 && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(ori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          pos.x--;
-        }
-      }
-      else if(ky == RIGHT)  {
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x+1 && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(ori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          pos.x++;
-        }
-      }
-      else if(ky == UP)  {
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.z == pos.z-1 && ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).state == 0)  {
-            if (collide(ori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          pos.z--;
-        }
-      }
-      else if(ky == DOWN)  {
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.z == pos.z+1 && ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).state == 0)  {
-            if (collide(ori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          pos.z++;
-        }
-      }
-      else if(ky == 'Q')  { //xRot //CounterClockwise from the Left
-             if (ori==0)  newori=17; else if (ori==1) newori=18;  else if (ori==2) newori=19;  else if (ori==3) newori=16;
-        else if (ori==4)  newori=21; else if (ori==5) newori=22;  else if (ori==6) newori=23;  else if (ori==7) newori=20;
-        else if (ori==8)  newori=9;  else if (ori==9) newori=10;  else if (ori==10) newori=11; else if (ori==11) newori=8;
-        else if (ori==12) newori=13; else if (ori==13) newori=14; else if (ori==14) newori=15; else if (ori==15) newori=12;
-        else if (ori==16) newori=4;  else if (ori==17) newori=7;  else if (ori==18) newori=6;  else if (ori==19) newori=5;
-        else if (ori==20) newori=0;  else if (ori==21) newori=3;  else if (ori==22) newori=2;  else if (ori==23) newori=1;
-      
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
-      else if(ky == 'W')  { //xRot //Clockwise from the Left
-             if (ori==0)  newori=20; else if (ori==1) newori=23;  else if (ori==2) newori=22;  else if (ori==3) newori=21;
-        else if (ori==4)  newori=16; else if (ori==5) newori=19;  else if (ori==6) newori=18;  else if (ori==7) newori=17;
-        else if (ori==8)  newori=11; else if (ori==9) newori=8;   else if (ori==10) newori=9;  else if (ori==11) newori=10;
-        else if (ori==12) newori=15; else if (ori==13) newori=12; else if (ori==14) newori=13; else if (ori==15) newori=14;
-        else if (ori==16) newori=3;  else if (ori==17) newori=0;  else if (ori==18) newori=1;  else if (ori==19) newori=2;
-        else if (ori==20) newori=7;  else if (ori==21) newori=4;  else if (ori==22) newori=5;  else if (ori==23) newori=6;
-          
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
-      else if(ky == 'A')  { //yRot //CounterClockwise from Above
-             if (ori==0)  newori=3;  else if (ori==1) newori=0;   else if (ori==2) newori=1;   else if (ori==3) newori=2;
-        else if (ori==4)  newori=7;  else if (ori==5) newori=4;   else if (ori==6) newori=5;   else if (ori==7) newori=6;
-        else if (ori==8)  newori=16; else if (ori==9) newori=17;  else if (ori==10) newori=18; else if (ori==11) newori=19;
-        else if (ori==12) newori=20; else if (ori==13) newori=21; else if (ori==14) newori=22; else if (ori==15) newori=23;
-        else if (ori==16) newori=15; else if (ori==17) newori=14; else if (ori==18) newori=13; else if (ori==19) newori=12;
-        else if (ori==20) newori=11; else if (ori==21) newori=10; else if (ori==22) newori=9;  else if (ori==23) newori=8;
-        
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
-      else if(ky == 'S')  { //yRot //Clockwise from Above
-             if (ori==0)  newori=1;  else if (ori==1) newori=2;   else if (ori==2) newori=3;   else if (ori==3) newori=0;
-        else if (ori==4)  newori=5;  else if (ori==5) newori=6;   else if (ori==6) newori=7;   else if (ori==7) newori=4;
-        else if (ori==8)  newori=23; else if (ori==9) newori=22;  else if (ori==10) newori=21; else if (ori==11) newori=20;
-        else if (ori==12) newori=19; else if (ori==13) newori=18; else if (ori==14) newori=17; else if (ori==15) newori=16;
-        else if (ori==16) newori=8;  else if (ori==17) newori=9;  else if (ori==18) newori=10; else if (ori==19) newori=11;
-        else if (ori==20) newori=12; else if (ori==21) newori=13; else if (ori==22) newori=14; else if (ori==23) newori=15;
-          
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
-      else if(ky == 'Z')  { //zRot //CounterClockwise from in Front
-                 if (ori==0)  newori=13; else if (ori==1) newori=12;  else if (ori==2) newori=15;  else if (ori==3) newori=14;
-            else if (ori==4)  newori=9;  else if (ori==5) newori=8;   else if (ori==6) newori=11;  else if (ori==7) newori=10;
-            else if (ori==8)  newori=0;  else if (ori==9) newori=1;   else if (ori==10) newori=2;  else if (ori==11) newori=3;
-            else if (ori==12) newori=4;  else if (ori==13) newori=5;  else if (ori==14) newori=6;  else if (ori==15) newori=7;
-            else if (ori==16) newori=17; else if (ori==17) newori=18; else if (ori==18) newori=19; else if (ori==19) newori=16;
-            else if (ori==20) newori=21; else if (ori==21) newori=22; else if (ori==22) newori=23; else if (ori==23) newori=20;
-          
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
-      else if(ky == 'X')  { //zRot //Clockwise from in Front
-             if (ori==0)  newori=8;  else if (ori==1) newori=9;   else if (ori==2) newori=10;  else if (ori==3) newori=11;
-        else if (ori==4)  newori=12; else if (ori==5) newori=13;  else if (ori==6) newori=14;  else if (ori==7) newori=15;
-        else if (ori==8)  newori=5;  else if (ori==9) newori=4;   else if (ori==10) newori=7;  else if (ori==11) newori=6;
-        else if (ori==12) newori=1;  else if (ori==13) newori=0;  else if (ori==14) newori=3;  else if (ori==15) newori=2;
-        else if (ori==16) newori=19; else if (ori==17) newori=16; else if (ori==18) newori=17; else if (ori==19) newori=18;
-        else if (ori==20) newori=23; else if (ori==21) newori=20; else if (ori==22) newori=21; else if (ori==23) newori=22;
-          
-        for(int i=0; i<ninjoids.size(); i++)  {
-          if (ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.y == pos.y && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-            if (collide(newori, ninjoids.get(i).ori) == true) col = true;
-          }
-        }
-        if (col == false)  {
-          ori = newori;
-        }
-      }
+  //Rotational Ninjoid Movement
+  void rot(int rca, int rcb)  {
+    if (nope == false) {
     }
   }
   
   //-----------------------------------------------------------------------------------------------------------------
-  //Automatic Ninjoid Movement
-  void move()  {
-    if (gamestate == 3) {
-      pushdown = pushSpd;
-      boolean col = false;
-      if (state == 0)  {
-      }
-      else if (state == 1)  {
-      }
-      else if (state == 2)  {
-        if (millis() - timeN >= pushdown) {
-          for(int i=0; i<ninjoids.size(); i++)  {
-            if (ninjoids.get(i).pos.y == pos.y+1 && ninjoids.get(i).pos.x == pos.x && ninjoids.get(i).pos.z == pos.z && ninjoids.get(i).state == 0)  {
-              if (collide(ori, ninjoids.get(i).ori) == true) col = true;
-            }
-          }
-          if (col == false && state == 2)  {
-            pos.y++;
-          }
-          else  {
-            if (pos.y > 0 || (pos. y == 0 && (pos.x == 0 || pos.x == 3 || pos.z == 0 || pos.z == 3)))  {
-              gamestate = 2;
-              for (int i=curPiec; i<curPiec+3; i++) {
-                ninjoids.get(i).die();
-              }
-            }
-            else  {
-              gamestate = 4;
-            }
-          }
-          timeN = millis();
-        }
-        
-        if(pos.y > 7)  {
-          pos.y = 7;
-          gamestate = 2;
-          println("curP: "+curPiec);
-          for (int i=curPiec; i<curPiec+3; i++) {
-            ninjoids.get(i).die();
-          }
-          println("curP: "+curPiec);
-        }
-        if(pos.x < 0)  {
-          pos.x = 0;
-        }
-        else if(pos.x > 3)  {
-          pos.x = 3;
-        }
-        if(pos.z < 0)  {
-          pos.z = 0;
-        }
-        else if(pos.z > 3)  {
-          pos.z = 3;
-        }
-      }
+  //Horizontal Ninjoid Movement
+  void move(int hA, int hB)  {
+    if (nope == false) {
+           if (hA == -1) pos.x--;
+      else if (hA == 1)  pos.x++;
+           if (hB == -1) pos.z--;
+      else if (hB == 1)  pos.z++;
     }
+  }
+  
+  //-----------------------------------------------------------------------------------------------------------------
+  //Vertical Ninjoid Movement          //Much function, very wow
+  void drop()  {
+    pos.y++;
+  }
+  
+  void undrop()  {
+    pos.y--;
   }
     
   //-----------------------------------------------------------------------------------------------------------------
