@@ -14,6 +14,7 @@ class Ninjoid  {
     ninjNumA = n;
     ninjNumB = n%3;
     
+    //-----------------------------------------------------------------------------------------------------------------
     //Define Focal Point of Ninjoid
     if (state == 0)  {
     }
@@ -65,7 +66,7 @@ class Ninjoid  {
   }
     
   //-----------------------------------------------------------------------------------------------------------------
-  //Move Next Piece to 
+  //Move Next Piece to Spawn Zone
   void next()  {
     
     state = 2;
@@ -332,11 +333,9 @@ class Ninjoid  {
           else  {
             if (pos.y > 0 || (pos. y == 0 && (pos.x == 0 || pos.x == 3 || pos.z == 0 || pos.z == 3)))  {
               gamestate = 2;
-              println("curP: "+curPiec);
               for (int i=curPiec; i<curPiec+3; i++) {
                 ninjoids.get(i).die();
               }
-              println("curP: "+curPiec);
             }
             else  {
               gamestate = 4;

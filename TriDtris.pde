@@ -183,7 +183,7 @@ void keyPressed()  {
     gamestate = 3;
   }
   else if ((gamestate == 2 || gamestate == 3) && keyCode == 32)  {
-    pushSpd = 200;
+    pushSpd = 500;
   }
   
   if (gamestate != 4)  {
@@ -205,7 +205,7 @@ void keyPressed()  {
 void keyReleased()  {
   
   if ((gamestate ==  2 || gamestate == 3) && keyCode == 32)  {
-    pushSpd = 1000;
+    pushSpd = 3000;
   }
   else if (gamestate != 4)  {
     for (int i=(3*curPiec); i<(3*curPiec)+3; i++){
