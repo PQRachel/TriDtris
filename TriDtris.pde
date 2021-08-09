@@ -2,16 +2,13 @@
   //
 
 //Things to Add: (Fix all the bugs!)
-  //Pieces have multiple ninjoids
-  //Pieces have single rotation center point
-  //Make all 41 pieces (42-ninjoid set)
+  //Piece Rotation Works
+  //Make all 41 pieces (42 w/o ninjoid set)
   //Implement basic 41-bag for now
   //Figure out how to make ninjoids occur in the 42-bag.
   //Layers clear upon filling
   //Add scoring
   //DAS???
-  //Add pushdown to input display
-  //Make pushdown disable other movement
   //Add another way to view the board simultaneously for easier board state recognition
 
 PFont pqrf; PFont ffff;
